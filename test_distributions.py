@@ -40,7 +40,5 @@ def test_Gaussian_specified_values():
     assert len(myGauss.data) == 0
 
 tests = TestGaussianClass()
-
 tests_loaded = unittest.TestLoader().loadTestsFromModule(tests)
-
 unittest.TextTestRunner().run(tests_loaded)

@@ -1,3 +1,5 @@
+import math
+
 class Gaussian():
     """ Gaussian distribution class for calculating and 
     visualizing a Gaussian distribution.
