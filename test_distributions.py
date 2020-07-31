@@ -1,28 +1,36 @@
 import unittest
-from Gaussian import Gaussian
+
+from  Gaussian import Gaussian
+#from distributions import Binomial
 
 class TestGaussianClass(unittest.TestCase):
     def setUp(self):
         self.gaussian = Gaussian(25, 2)
+        self.gaussian.read_data_file('numbers.txt')
 
-    def test_initialization(self):
+    def test_initialization(self): 
         self.assertEqual(self.gaussian.mean, 25, 'incorrect mean')
         self.assertEqual(self.gaussian.stdev, 2, 'incorrect standard deviation')
 
-    def test_pdf(self):
-        self.assertEqual(round(self.gaussian.pdf(25), 5), 0.19947,\
-         'pdf function does not give expected result')
+    def test_readdata(self):
+        self.assertEqual(self.gaussian.data,\
+         [1, 3, 99, 100, 120, 32, 330, 23, 76, 44, 31], 'data not read in correctly')
 
     def test_meancalculation(self):
-        self.gaussian.read_data_file('numbers.txt', True)
         self.assertEqual(self.gaussian.calculate_mean(),\
          sum(self.gaussian.data) / float(len(self.gaussian.data)), 'calculated mean not as expected')
 
     def test_stdevcalculation(self):
-        self.gaussian.read_data_file('numbers.txt', True)
-        self.assertEqual(round(self.gaussian.stdev, 2), 92.87, 'sample standard deviation incorrect')
-        self.gaussian.read_data_file('numbers.txt', False)
-        self.assertEqual(round(self.gaussian.stdev, 2), 88.55, 'population standard deviation incorrect')
+        self.assertEqual(round(self.gaussian.calculate_stdev(), 2), 92.87, 'sample standard deviation incorrect')
+        self.assertEqual(round(self.gaussian.calculate_stdev(0), 2), 88.55, 'population standard deviation incorrect')
+
+    def test_pdf(self):
+        self.assertEqual(round(self.gaussian.pdf(25), 5), 0.19947,\
+         'pdf function does not give expected result') 
+        self.gaussian.calculate_mean()
+        self.gaussian.calculate_stdev()
+        self.assertEqual(round(self.gaussian.pdf(75), 5), 0.00429,\
+        'pdf function after calculating mean and stdev does not give expected result')      
 
     def test_add(self):
         gaussian_one = Gaussian(25, 3)
@@ -31,27 +39,3 @@ class TestGaussianClass(unittest.TestCase):
         
         self.assertEqual(gaussian_sum.mean, 55)
         self.assertEqual(gaussian_sum.stdev, 5)
-
-    def test_repr(self):
-        gaussian_one = Gaussian(25, 3)
-        
-        self.assertEqual(str(gaussian_one), "mean 25, standard deviation 3"
-                )
-def test_pytest():
-    assert True
-
-def test_Gaussian_default_values():
-    myGauss = Gaussian()
-    assert myGauss.mean == 0
-    assert myGauss.stdev == 1
-    assert len(myGauss.data) == 0
-
-def test_Gaussian_specified_values():
-    myGauss = Gaussian(mean = 2, stdev = 3)
-    assert myGauss.mean == 2
-    assert myGauss.stdev == 3
-    assert len(myGauss.data) == 0
-
-tests = TestGaussianClass()
-tests_loaded = unittest.TestLoader().loadTestsFromModule(tests)
-unittest.TextTestRunner().run(tests_loaded)

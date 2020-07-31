@@ -1,7 +1,7 @@
 from Distribution import Distribution
 import math
 
-class Gaussian():
+class Gaussian(Distribution):
     """ Gaussian distribution class for calculating and 
     visualizing a Gaussian distribution.
     
@@ -29,6 +29,7 @@ class Gaussian():
         mean = 0
         if len(self.data) != 0:
             mean = sum(self.data)/float(len(self.data))
+        self.mean = mean
         return mean
                 
 
@@ -53,52 +54,18 @@ class Gaussian():
         #   Keep the value of sample in mind for calculating the standard deviation
         #
         #   Make sure to update self.stdev and return the standard deviation as well    
+        mean = self.calculate_mean()
         stdev = 1
         squared_sums = 0
         for value in self.data:
-            squared_sums += (value - self.mean) ** 2
+            squared_sums += (value - mean) ** 2
         
         if sample:
             stdev = math.sqrt( squared_sums/(len(self.data)-1) )
         else:
             stdev = math.sqrt( squared_sums/len(self.data) )
+        self.stdev = stdev
         return stdev
-        
-
-    def read_data_file(self, file_name, sample=True):
-    
-        """Method to read in data from a txt file. The txt file should have
-        one number (float) per line. The numbers are stored in the data attribute. 
-        After reading in the file, the mean and standard deviation are calculated
-                
-        Args:
-            file_name (string): name of a file to read from
-        
-        Returns:
-            None
-        
-        """
-        
-        # This code opens a data file and appends the data to a list called data_list
-        with open(file_name) as file:
-            data_list = []
-            line = file.readline()
-            while line:
-                data_list.append(int(line))
-                line = file.readline()
-        file.close()
-    
-        # TODO: 
-        #   Update the self.data attribute with the data_list
-        #   Update self.mean with the mean of the data_list. 
-        #       You can use the calculate_mean() method with self.calculate_mean()
-        #   Update self.stdev with the standard deviation of the data_list. Use the 
-        #       calcaulte_stdev() method.
-        #data_list.sort()
-        self.data = data_list
-        self.mean = self.calculate_mean()
-        self.stdev = self.calculate_stdev(sample)
-                
         
     def plot_histogram(self):
         """Method to output a histogram of the instance variable data using 
