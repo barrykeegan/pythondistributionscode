@@ -1,3 +1,4 @@
+from Distribution import Distribution
 import math
 
 class Gaussian():
@@ -12,9 +13,7 @@ class Gaussian():
     """
 
     def __init__(self, mean = 0, stdev = 1):
-        self.mean = mean
-        self.stdev = stdev
-        self.data = []
+        Distribution.__init__(self, mean, stdev)
 
     def calculate_mean(self):
         """Method to calculate the mean of the data set.
